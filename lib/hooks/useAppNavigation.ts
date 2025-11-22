@@ -3,29 +3,29 @@
 import { useRouter } from "next/navigation";
 
 export const PATHS = {
-  LANDING: "/",
-  SIGN_IN: "/signin",
-  SIGN_UP: "/signup",
-  DASHBOARD: "/dashboard",
+  LANDING: { path: "/", isSecure: false },
+  SIGN_IN: { path: "/signin", isSecure: false },
+  SIGN_UP: { path: "/signup", isSecure: false },
+  DASHBOARD: { path: "/dashboard", isSecure: true },
 };
 
-type AppRouteName = "landing" | "signin" | "signup" | "dashboard";
+export type AppRouteName = "landing" | "signin" | "signup" | "dashboard";
 
 export const useAppNavigation = () => {
   const router = useRouter();
 
   const routeHandlers: Record<AppRouteName, () => void> = {
     landing: () => {
-      router.push(PATHS.LANDING);
+      router.push(PATHS.LANDING.path);
     },
     signin: () => {
-      router.push(PATHS.SIGN_IN);
+      router.push(PATHS.SIGN_IN.path);
     },
     signup: () => {
-      router.push(PATHS.SIGN_UP);
+      router.push(PATHS.SIGN_UP.path);
     },
     dashboard: () => {
-      router.push(PATHS.DASHBOARD);
+      router.push(PATHS.DASHBOARD.path);
     },
   };
 

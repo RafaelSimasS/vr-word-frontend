@@ -8,6 +8,7 @@ type SimpleInputProps = {
   onChange: (v: string) => void;
   type?: "text" | "email" | "password";
   placeholder?: string;
+  name?: string;
 };
 
 const SimpleInput: React.FC<SimpleInputProps> = ({
@@ -17,11 +18,13 @@ const SimpleInput: React.FC<SimpleInputProps> = ({
   onChange,
   type = "text",
   placeholder,
+  name,
 }) => {
   return (
     <label className="block w-full mb-4">
       <div className="text-xs text-gray-300 mb-1">{label}</div>
       <Input
+        name={name}
         id={id}
         value={value}
         onChange={(e) => onChange(e.target.value)}

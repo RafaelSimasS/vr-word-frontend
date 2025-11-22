@@ -53,6 +53,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmit }) => {
           render={({ field }) => (
             <>
               <SimpleInput
+                name="email"
                 label="Email"
                 value={field.value}
                 onChange={field.onChange}
@@ -75,6 +76,7 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmit }) => {
           render={({ field }) => (
             <>
               <SimpleInput
+                name="password"
                 label="Senha"
                 value={field.value}
                 onChange={field.onChange}
