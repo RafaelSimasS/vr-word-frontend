@@ -64,6 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         method: "POST",
         credentials: "include",
       });
+      window.location.replace("/signin");
     } catch (err) {
       console.error("logout error", err);
     } finally {
