@@ -1,13 +1,13 @@
 import React from "react";
-import { Input } from "@/components/atoms/input";
 import { cn } from "@/lib/utils";
+import { Textarea } from "@/components/atoms/textarea";
 
-type SimpleInputProps = {
+type SimpleTextAreaProps = {
   label: string;
   onChange: (v: string) => void;
-} & React.InputHTMLAttributes<HTMLInputElement>;
+} & React.TextareaHTMLAttributes<HTMLTextAreaElement>;
 
-const SimpleInput: React.FC<SimpleInputProps> = ({
+const SimpleTextArea: React.FC<SimpleTextAreaProps> = ({
   label,
   className,
   ...props
@@ -18,11 +18,11 @@ const SimpleInput: React.FC<SimpleInputProps> = ({
         {label}
       </div>
 
-      <Input
+      <Textarea
         {...props}
         className={cn(
           `
-          w-full rounded-md px-3 py-2 text-sm
+          w-full resize-none rounded-md px-3 py-2 text-sm
           border border-gray-300 bg-white text-gray-900 placeholder-gray-400
           shadow-sm transition-colors
 
@@ -39,4 +39,4 @@ const SimpleInput: React.FC<SimpleInputProps> = ({
   );
 };
 
-export default SimpleInput;
+export default SimpleTextArea;

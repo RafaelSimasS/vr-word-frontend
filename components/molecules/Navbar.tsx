@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isLoading, isAuthenticated, logout } = useAuth();
+  const { isLoading, isAuthenticated, logout, revalidate } = useAuth();
 
   const headerRef = useRef<HTMLElement | null>(null);
   const [headerHeight, setHeaderHeight] = useState<number>(64);
@@ -52,6 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
   const THRESHOLD = 10;
 
   useEffect(() => {
+    revalidate();
     const measure = () => {
       if (headerRef.current) {
         setHeaderHeight(headerRef.current.offsetHeight);
@@ -65,7 +66,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [revalidate]);
 
   useEffect(() => {
     let ticking = false;

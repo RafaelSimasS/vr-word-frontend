@@ -10,7 +10,7 @@ export type DeckType = {
 export const Deck = (deck: DeckType) => {
   const router = useRouter();
   const openDeck = (id: string) => {
-    router.push(`/deck/${id}`);
+    router.push(`/decks/${id}`);
   };
 
   const studyDeck = (id: string) => {
