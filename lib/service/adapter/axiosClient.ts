@@ -29,4 +29,18 @@ axiosClient.interceptors.request.use((config) => {
   return config;
 });
 
+axiosClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    try {
+      if (typeof window !== "undefined" && error?.response?.status === 401) {
+        localStorage.removeItem("accessToken");
+
+        window.location.href = "/signin";
+      }
+    } catch {}
+    return Promise.reject(error);
+  }
+);
+
 export default axiosClient;

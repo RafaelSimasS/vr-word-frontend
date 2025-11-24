@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createCardSchema,
   type CreateCardForm,
 } from "@/lib/schemas/card.schemas";
-import { useCreateCard } from "@/lib/hooks/useCards";
+import { useUpdateCard } from "@/lib/hooks/useCards";
 import { Button } from "@/components/atoms/button";
 import RichTextarea, {
   renderMarkupToHtml,
@@ -22,31 +22,38 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/atoms/dialog";
+import { type Card as CardType } from "@/lib/service/card";
 
 type Props = {
   open: boolean;
   onOpenChange: (v: boolean) => void;
-  deckId: string;
+  card?: CardType | null;
 };
 
-const CreateCardModal: React.FC<Props> = ({ open, onOpenChange, deckId }) => {
+const EditCardModal: React.FC<Props> = ({ open, onOpenChange, card }) => {
   const { control, handleSubmit, reset, formState } = useForm<CreateCardForm>({
     resolver: zodResolver(createCardSchema),
-    defaultValues: { front: "", back: "" },
+    defaultValues: { front: card?.front ?? "", back: card?.back ?? "" },
     mode: "onTouched",
   });
 
+  // tabs: "edit" shows both editors, "preview" shows both previews
   const [tab, setTab] = useState<"edit" | "preview">("edit");
-  const createMutation = useCreateCard();
+  const updateMutation = useUpdateCard();
+
+  // keep form synced when `card` changes
+  useEffect(() => {
+    reset({ front: card?.front ?? "", back: card?.back ?? "" });
+  }, [card, reset]);
 
   const onSubmit = async (data: CreateCardForm) => {
+    if (!card) return;
     try {
-      await createMutation.mutateAsync({ ...data, deckId });
-      reset();
+      await updateMutation.mutateAsync({ id: card.id, payload: data });
       onOpenChange(false);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      alert(err?.message ?? "Erro ao criar card");
+      alert(err?.message ?? "Erro ao atualizar card");
     }
   };
 
@@ -58,9 +65,9 @@ const CreateCardModal: React.FC<Props> = ({ open, onOpenChange, deckId }) => {
           <DialogHeader>
             <div className="flex items-start justify-between w-full">
               <div>
-                <DialogTitle>Novo card</DialogTitle>
+                <DialogTitle>Editar card</DialogTitle>
                 <DialogDescription>
-                  Adicione frente e costa com formatação.
+                  Altere frente e costa com formatação.
                 </DialogDescription>
               </div>
               <DialogClose></DialogClose>
@@ -194,4 +201,4 @@ const CreateCardModal: React.FC<Props> = ({ open, onOpenChange, deckId }) => {
   );
 };
 
-export default CreateCardModal;
+export default EditCardModal;

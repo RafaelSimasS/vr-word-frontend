@@ -16,6 +16,7 @@ import {
   type UpdateCardDTO,
 } from "@/lib/service/card";
 import { parseAxiosError } from "@/lib/service/parse";
+import { deckKey } from "../service/hooks/useDecks";
 
 /**
  * Query keys helpers
@@ -104,8 +105,9 @@ export function useCreateCard() {
       }
     },
     onSuccess: (created) => {
-      // invalidate the list for the deck
       qc.invalidateQueries({ queryKey: CARDS_LIST_KEY(created.deckId) });
+      qc.invalidateQueries({ queryKey: deckKey(created.deckId) });
+      qc.invalidateQueries({ queryKey: ["study", "dueCount", created.deckId] });
     },
   });
 }
@@ -190,25 +192,51 @@ export function useDeleteCard() {
       return deleteCard(id);
     },
     onMutate: async (id: string) => {
-      // remove from list optimistic
-      await qc.cancelQueries({ queryKey: CARDS_LIST_KEY(undefined) }); // best-effort cancel all cards lists
-      // try to find the deckId from cache to only mutate that list
+      await qc.cancelQueries({ queryKey: ["cards"] }); // cancela todas as lists de cards (prefix)
+      await qc.cancelQueries({ queryKey: cardKey(id) }); // cancela query do card individual (se existir)
+
       const existingCard = qc.getQueryData<Card>(cardKey(id));
-      const deckId = existingCard?.deckId;
-      const listKey = CARDS_LIST_KEY(deckId);
-      const previous = deckId ? qc.getQueryData<Card[]>(listKey) : undefined;
-      if (previous) {
+      let deckId = existingCard?.deckId;
+
+      if (!deckId) {
+        const lists = qc.getQueriesData({ queryKey: ["cards"] }); // retorna [[key, data], ...]
+        for (const [key, data] of lists) {
+          const cards = data as Card[] | undefined;
+          if (cards?.some((c) => c.id === id)) {
+            // key is like ["cards", "<deckId>"]
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            deckId = (key as any)[1] as string | undefined;
+            break;
+          }
+        }
+      }
+
+      const previous = deckId
+        ? qc.getQueryData<Card[]>(CARDS_LIST_KEY(deckId))
+        : undefined;
+
+      if (previous && deckId) {
         qc.setQueryData<Card[]>(
-          listKey,
+          CARDS_LIST_KEY(deckId),
           previous.filter((c) => c.id !== id)
         );
       }
-      return { previous, deckId };
+
+      if (existingCard) {
+        qc.removeQueries({ queryKey: cardKey(id) });
+      }
+
+      return { previous, deckId, cardSnapshot: existingCard };
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error, id, context: any) => {
+      // rollback list
       if (context?.previous && context.deckId) {
         qc.setQueryData(CARDS_LIST_KEY(context.deckId), context.previous);
+      }
+      // rollback card cache
+      if (context?.cardSnapshot) {
+        qc.setQueryData(cardKey(id), context.cardSnapshot);
       }
 
       try {
@@ -227,8 +255,14 @@ export function useDeleteCard() {
     onSettled: (_data, _err, id, context: any) => {
       if (context?.deckId) {
         qc.invalidateQueries({ queryKey: CARDS_LIST_KEY(context.deckId) });
+        qc.invalidateQueries({ queryKey: deckKey(context.deckId) });
+        qc.invalidateQueries({
+          queryKey: ["study", "dueCount", context.deckId],
+        });
       } else {
+        // fallback: invalida todas as listas de cards e todos os decks (menos intrusivo que nada)
         qc.invalidateQueries({ queryKey: ["cards"] });
+        qc.invalidateQueries({ predicate: (q) => q.queryKey[0] === "deck" });
       }
       qc.invalidateQueries({ queryKey: cardKey(id) });
     },

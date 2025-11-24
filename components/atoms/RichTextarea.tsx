@@ -106,7 +106,7 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
   return (
     <div className="w-full">
       {label && (
-        <div className="text-xs text-gray-600 dark:text-gray-300 mb-2">
+        <div className="text-xs text-gray-600 dark:text-gray-300 mb-2 ">
           {label}
         </div>
       )}
@@ -115,7 +115,7 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
           <button
             type="button"
             onClick={applyBold}
-            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
+            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 shrink-0"
             aria-label="bold"
           >
             <strong>B</strong>
@@ -124,13 +124,13 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
           <button
             type="button"
             onClick={applyItalic}
-            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
+            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 shrink-0"
             aria-label="italic"
           >
             <em>I</em>
           </button>
 
-          <div className="flex items-center gap-1 ml-2 flex-shrink-0">
+          <div className="flex items-center gap-1 ml-2 shrink-0">
             {[
               "#000000",
               "#C0392B",
@@ -144,7 +144,7 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
                 type="button"
                 aria-label={`color ${c}`}
                 onClick={() => applyColor(c)}
-                className="w-6 h-6 rounded flex-shrink-0"
+                className="w-6 h-6 rounded shrink-0"
                 style={{ background: c, border: "1px solid rgba(0,0,0,0.08)" }}
               />
             ))}

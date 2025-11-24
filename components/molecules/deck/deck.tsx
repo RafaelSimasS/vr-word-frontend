@@ -14,7 +14,7 @@ export const Deck = (deck: DeckType) => {
   };
 
   const studyDeck = (id: string) => {
-    router.push(`/study/${id}`);
+    router.push(`/decks/${id}/study`);
   };
   return (
     <div
