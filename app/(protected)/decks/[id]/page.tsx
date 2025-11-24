@@ -1,7 +1,7 @@
 // app/decks/[id]/page.tsx
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
 } from "@/components/atoms/card";
 import { useGetDeck } from "@/lib/service/hooks/useDecks";
 import { Button } from "@/components/atoms/button";
+import CreateCardModal from "@/components/molecules/card/CreateCardModal";
 
 export default function DeckPage() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function DeckPage() {
   const id = params?.id as string | undefined;
 
   const { data: deck, isLoading, isError } = useGetDeck(id);
+  const [openCreate, setOpenCreate] = useState(false);
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-700 p-4 sm:p-6 md:p-8">
@@ -30,11 +32,18 @@ export default function DeckPage() {
             <p className="text-sm text-muted-foreground mt-1">
               {deck ? "Visão do deck" : ""}
             </p>
+            {deck && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Cartões:{" "}
+                <span className="font-medium">{deck.cardsCount ?? 0}</span>
+              </p>
+            )}
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             <Button variant="ghost" onClick={() => router.back()}>
               Voltar
             </Button>
+            <Button onClick={() => setOpenCreate(true)}>+ Novo card</Button>
           </div>
         </header>
 
@@ -75,6 +84,14 @@ export default function DeckPage() {
           </CardContent>
         </Card>
       </div>
+
+      {id && (
+        <CreateCardModal
+          open={openCreate}
+          onOpenChange={setOpenCreate}
+          deckId={id}
+        />
+      )}
     </main>
   );
 }
