@@ -111,23 +111,26 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
         </div>
       )}
       <div className="border rounded-md bg-white dark:bg-gray-800">
-        <div className="flex gap-2 p-2 border-b dark:border-b-0">
+        <div className="flex flex-wrap items-center gap-2 p-2 border-b dark:border-b-0">
           <button
             type="button"
             onClick={applyBold}
-            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
+            aria-label="bold"
           >
             <strong>B</strong>
           </button>
+
           <button
             type="button"
             onClick={applyItalic}
-            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700 flex-shrink-0"
+            aria-label="italic"
           >
             <em>I</em>
           </button>
 
-          <div className="flex items-center gap-1 ml-2">
+          <div className="flex items-center gap-1 ml-2 flex-shrink-0">
             {[
               "#000000",
               "#C0392B",
@@ -141,13 +144,13 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
                 type="button"
                 aria-label={`color ${c}`}
                 onClick={() => applyColor(c)}
-                className="w-6 h-6 rounded"
+                className="w-6 h-6 rounded flex-shrink-0"
                 style={{ background: c, border: "1px solid rgba(0,0,0,0.08)" }}
               />
             ))}
           </div>
 
-          <div className="ml-auto text-xs text-muted-foreground">
+          <div className="w-full sm:w-auto sm:ml-auto text-xs text-muted-foreground text-left sm:text-right mt-2 sm:mt-0">
             Use **bold**, _italic_ e [color=#rrggbb]texto[/color]
           </div>
         </div>
@@ -159,7 +162,7 @@ const RichTextarea: React.FC<RichTextareaProps> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={cn(
-            "w-full resize-none px-3 py-2 text-sm bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none",
+            "w-full min-w-0 box-border resize-y px-3 py-2 text-sm bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none",
             className
           )}
         />
