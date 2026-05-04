@@ -30,22 +30,23 @@ const SignInForm: React.FC<SignInFormProps> = ({ onSubmit }) => {
     defaultValues: { email: "", password: "" },
     mode: "onTouched",
   });
-
-  const submit = (data: SignInFormData) => {
+  const internalHandleSubmit = handleSubmit(async (data) => {
     setLoading(true);
     try {
-      onSubmit({ email: data.email, password: data.password });
+      await onSubmit({
+        email: data.email,
+        password: data.password,
+      });
     } finally {
       setLoading(false);
     }
-  };
-
+  });
   return (
     <AuthCard
       title="Entrar"
       subtitle="Informe seus dados para acessar sua conta!"
     >
-      <form onSubmit={handleSubmit(submit)} className="w-full" noValidate>
+      <form onSubmit={internalHandleSubmit} className="w-full" noValidate>
         {/* Email */}
         <Controller
           name="email"

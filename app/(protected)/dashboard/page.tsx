@@ -95,10 +95,6 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </section>
-
-        <footer className="mt-6 text-center text-xs text-muted-foreground">
-          &copy; 2025 Rafael de Sousa Simas. Todos os direitos reservados.
-        </footer>
       </div>
 
       <CreateDeckModal open={openCreate} onOpenChange={setOpenCreate} />
