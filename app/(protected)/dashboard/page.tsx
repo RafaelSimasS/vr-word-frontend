@@ -15,6 +15,7 @@ import { Deck as DeckComponent } from "@/components/molecules/deck/deck";
 import CreateDeckModal from "@/components/molecules/deck/CreateDeckModal";
 import { useGetDecks } from "@/lib/service/hooks/useDecks";
 import { Button } from "@/components/atoms/button";
+import { Camera } from "lucide-react";
 
 export default function DashboardPage() {
   const { user: userAuthInfo } = useAuth();
@@ -42,11 +43,22 @@ export default function DashboardPage() {
       />
 
       <div className="max-w-2xl mx-auto">
-        <header className="mb-6">
-          <h1 className="text-2xl font-semibold">Olá, {username}</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Bem-vindo ao seu painel.
-          </p>
+        <header className="mb-6 flex items-start justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-semibold">Olá, {username}</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Bem-vindo ao seu painel.
+            </p>
+          </div>
+
+          {/* Botão de câmera — visível apenas em telas menores que sm */}
+          <button
+            onClick={() => router.push("/camera")}
+            aria-label="Detectar objeto com câmera"
+            className="sm:hidden shrink-0 w-12 h-12 rounded-full bg-black dark:bg-white flex items-center justify-center shadow-md active:scale-95 transition-transform"
+          >
+            <Camera className="w-5 h-5 text-white dark:text-black" />
+          </button>
         </header>
 
         <section aria-labelledby="decks" className="space-y-4">

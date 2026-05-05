@@ -20,7 +20,7 @@ type NavbarProps = {
 const renderNavigationItem = (
   label: string,
   onClick: () => void,
-  variant: "default" | "ghost" = "default"
+  variant: "default" | "ghost" = "default",
 ) => (
   <NavigationMenuItem>
     <Button
@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const { isLoading, isAuthenticated, logout, revalidate } = useAuth();
+  const { isLoading, isAuthenticated, logout } = useAuth();
 
   const headerRef = useRef<HTMLElement | null>(null);
   const [headerHeight, setHeaderHeight] = useState<number>(64);
@@ -52,7 +52,6 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
   const THRESHOLD = 10;
 
   useEffect(() => {
-    revalidate();
     const measure = () => {
       if (headerRef.current) {
         setHeaderHeight(headerRef.current.offsetHeight);
@@ -66,7 +65,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [revalidate]);
+  }, []);
 
   useEffect(() => {
     let ticking = false;
@@ -131,7 +130,7 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
                 <>
                   {!pathname?.startsWith(PATHS.DASHBOARD.path)
                     ? renderNavigationItem("Dashboard", () =>
-                        router.push("/dashboard")
+                        router.push("/dashboard"),
                       )
                     : null}
                   {renderNavigationItem("Sair", () => logout(), "ghost")}
@@ -141,12 +140,12 @@ const Navbar: React.FC<NavbarProps> = ({ onRouteChange }) => {
                   {renderNavigationItem(
                     "Entrar",
                     () => onRouteChange("signin"),
-                    "ghost"
+                    "ghost",
                   )}
                   {renderNavigationItem(
                     "Criar conta",
                     () => onRouteChange("signup"),
-                    "default"
+                    "default",
                   )}
                 </>
               )}

@@ -7,6 +7,7 @@ export const PATHS = {
   SIGN_IN: { path: "/signin", isSecure: false },
   SIGN_UP: { path: "/signup", isSecure: false },
   DASHBOARD: { path: "/dashboard", isSecure: true },
+  CAMERA: { path: "/camera", isSecure: true },
 };
 
 export type AppRouteName = "landing" | "signin" | "signup" | "dashboard";
